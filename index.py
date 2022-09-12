@@ -17,6 +17,7 @@ class nomina:
         #name input
         Label(frame, text = 'Name: ').grid(row = 1, column = 0)
         self.name = Entry(frame)
+        self.name.focus()
         self.name.grid(row = 1, column= 1)
 
         #salary input
@@ -24,8 +25,20 @@ class nomina:
         self.salary = Entry(frame)
         self.salary.grid(row=2, column=1)
 
+        #days input
+        Label(frame, text='Days worked: ').grid(row= 3, column= 0)
+        self.days = Entry(frame)
+        self.days.grid(row=3, column=1)
+
         #add button
-        ttk.Button(frame, text = 'Generate nomina').grid(row=3,columnspan=2, sticky= W + E)
+        ttk.Button(frame, text = 'Generate nomina').grid(row=4,columnspan=2, sticky= W + E)
+
+        #table
+        self.tree = ttk.Treeview(height=10, columns=2)
+        self.tree.grid(row=5, column=0, columnspan= 2)
+        self.tree.heading('#0', text='Name', anchor=CENTER)
+        self.tree.heading('#1',text='Salary', anchor=CENTER)
+    
 
 
 if __name__ == '__main__':
