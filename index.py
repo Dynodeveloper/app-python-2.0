@@ -1,5 +1,7 @@
 
 from ast import Delete
+from cProfile import label
+from inspect import Parameter
 from tkinter import ttk
 from tkinter import *
 
@@ -113,12 +115,35 @@ class nomina:
         name = self.tree.item(self.tree.selection()) ['text']
         old_salary= self.tree.item(self.tree.selection()) ['values'][0]
         self.edit_wind = Toplevel()
-        self.edit_wind.title('Edit Nomina')        
+        self.edit_wind.title('Edit Nomina')  
+
+        #old name
+        Label(self.edit_wind, text= 'old name: ').grid(row=0, column= 1)
+        Entry(self.edit_wind,textvariable=StringVar(self.edit_wind, value = name), state='readonly').grid(row= 0, column =2)
 
 
+        # new name
+        Label(self.edit_wind, text='New name: ').grid(row=1, column=1)
+        new_name=Entry(self.edit_wind)
+        new_name.grid(row=1,column=2)
 
+        #old salary
+        Label(self.edit_wind, text='Old Salary').grid(row=2, column=1)
+        Entry(self.edit_wind,textvariable= StringVar(self.edit_wind, value= old_salary), state='readonly').grid(row=2, column=2)
+        #new salary
+        Label(self.edit_wind, text='New salary').grid(row=3, column= 1)
+        new_salary = Entry(self.edit_wind)
+        new_salary.grid(row=3, column=2)
 
+        Button(self.edit_wind, text='Update', command= lambda: self.edit_records(new_name.get(), name, new_salary.get(), old_salary)).grid(row=4, column=2, sticky= W)
 
+    def edit_records(self, new_name, name, new_salary,olda_salary):
+        query = 'UPDATE Nomina SET Name = ?, Salary = ? WHERE Name = ? AND Salary = ?'
+        parameters=(new_name, new_salary, name, olda_salary)
+        self.run_query(query, parameters)
+        self.edit_wind.destroy()
+        self.message['text'] = 'record of {} updated Successfully'.format(name)
+        self.get_nomina()
 
 
 if __name__ == '__main__':
