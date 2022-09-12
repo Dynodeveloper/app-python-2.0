@@ -49,7 +49,7 @@ class nomina:
 
         #buttons
         ttk.Button(text= 'DELETE', command= self.delete_nomina).grid(row=7, column= 0, sticky= W+E)
-        ttk.Button(text= 'EDIT').grid(row=7, column= 1, sticky= W+E)
+        ttk.Button(text= 'EDIT', command= self.edit_nomina).grid(row=7, column= 1, sticky= W+E)
 
         self.get_nomina()
 
@@ -110,7 +110,10 @@ class nomina:
         except IndexError as e:
             self.message['text'] = 'Please select a record'
             return   
-        self.message['text']= ''         
+        name = self.tree.item(self.tree.selection()) ['text']
+        old_salary= self.tree.item(self.tree.selection()) ['values'][0]
+        self.edit_wind = Toplevel()
+        self.edit_wind.title('Edit Nomina')        
 
 
 
