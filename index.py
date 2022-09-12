@@ -33,7 +33,7 @@ class nomina:
         self.days.grid(row=3, column=1)
 
         #add button
-        ttk.Button(frame, text = 'Generate nomina').grid(row=4,columnspan=2, sticky= W + E)
+        ttk.Button(frame, text = 'Generate nomina', command= self.add_nomina).grid(row=4,columnspan=2, sticky= W + E)
 
         #table
         self.tree = ttk.Treeview(height=10, columns=2)
@@ -62,6 +62,16 @@ class nomina:
         db_rows=self.run_query(query)
         for row in db_rows:
             self.tree.insert('', 0, text = row[1], values = row[2])
+
+    def validation(self):
+        return len(self.name.get()) !=0 and len(self.salary.get()) !=0
+
+    def add_nomina(self): 
+        if self.validation():
+            print(self.name.get())
+            print(self.salary.get())
+        else:
+            print('Name and Salary is required ')           
 
 
 
