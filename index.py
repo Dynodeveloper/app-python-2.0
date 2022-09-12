@@ -1,8 +1,10 @@
 
+from ast import Delete
 from tkinter import ttk
 from tkinter import *
 
 import sqlite3
+from unicodedata import name
 
 class nomina:
 
@@ -33,13 +35,21 @@ class nomina:
         self.days.grid(row=3, column=1)
 
         #add button
-        ttk.Button(frame, text = 'Generate nomina', command= self.add_nomina).grid(row=4,columnspan=2, sticky= W + E)
+        ttk.Button(frame, text = 'Generate nomina', command= self.add_nomina).grid(row=5,columnspan=2, sticky= W + E)
+
+        # output messages
+        self.message = Label(text='', fg='blue')
+        self.message.grid(row=4, column=0, columnspan=2, sticky= W + E)
 
         #table
         self.tree = ttk.Treeview(height=10, columns=2)
-        self.tree.grid(row=5, column=0, columnspan= 2)
+        self.tree.grid(row=6, column=0, columnspan= 2)
         self.tree.heading('#0', text='Name', anchor=CENTER)
         self.tree.heading('#1',text='Salary', anchor=CENTER)
+
+        #buttons
+        ttk.Button(text= 'DELETE', command= self.delete_nomina).grid(row=7, column= 0, sticky= W+E)
+        ttk.Button(text= 'EDIT').grid(row=7, column= 1, sticky= W+E)
 
         self.get_nomina()
 
@@ -68,10 +78,43 @@ class nomina:
 
     def add_nomina(self): 
         if self.validation():
-            print(self.name.get())
-            print(self.salary.get())
+            query='INSERT INTO Nomina VALUES(NULL,?,?)'
+            parameters =(self.name.get(), self.salary.get())
+            self.run_query(query,parameters)
+            self.message['text'] = 'Nomina of {} added Successfully'.format(self.name.get())
+            self.name.delete(0,END)
+            self.salary.delete(0,END)
+            self.days.delete(0,END)
+         
         else:
-            print('Name and Salary is required ')           
+            self.message['text'] = 'Name and Salary is required'
+        self.get_nomina() 
+
+    def delete_nomina(self):
+        self.message['text'] = ''
+        try:
+           self.tree.item(self.tree.selection())['text'][0]
+        except IndexError as e:
+            self.message['text'] = 'Please select a record'
+            return
+        self.message['text'] = ''    
+        name= self.tree.item(self.tree.selection())['text']    
+        query = 'DELETE FROM Nomina WHERE Name = ?'   
+        self.run_query(query, (name, )) 
+        self.message['text'] = 'Record of {} deleted successfully'.format(name)
+
+    def edit_nomina(self):
+        self.message['text'] = ''
+        try:
+           self.tree.item(self.tree.selection())['text'][0]
+        except IndexError as e:
+            self.message['text'] = 'Please select a record'
+            return   
+        self.message['text']= ''         
+
+
+
+
 
 
 
